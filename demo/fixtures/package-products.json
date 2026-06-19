@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "pkg_BeachReset",
+    "packageKey": "BeachReset",
+    "name": "Beach Reset",
+    "minParticipants": 3,
+    "maxParticipants": 8,
+    "standardRoomTypeKey": "dorm",
+    "preBlockedDormBeds": 3
+  },
+  {
+    "_id": "pkg_SurfAndSoul",
+    "packageKey": "SurfAndSoul",
+    "name": "Surf & Soul",
+    "minParticipants": 4,
+    "maxParticipants": 8,
+    "standardRoomTypeKey": "dorm",
+    "preBlockedDormBeds": 4
+  },
+  {
+    "_id": "pkg_RootsAndRitual",
+    "packageKey": "RootsAndRitual",
+    "name": "Roots & Ritual",
+    "minParticipants": 4,
+    "maxParticipants": 8,
+    "standardRoomTypeKey": "dorm",
+    "preBlockedDormBeds": 4
+  }
+]

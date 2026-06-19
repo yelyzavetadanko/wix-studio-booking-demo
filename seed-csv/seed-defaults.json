@@ -1,0 +1,54 @@
+{
+  "Rooms": [
+    {
+      "roomTypeKey": "dorm",
+      "name": "Dorm bed",
+      "displayLabel": "Dorm bed",
+      "inventoryKind": "bed",
+      "baseCapacity": 8,
+      "maxGuestsPerUnit": 1
+    },
+    {
+      "roomTypeKey": "single",
+      "name": "Single room",
+      "displayLabel": "Single room",
+      "inventoryKind": "room_unit",
+      "baseCapacity": 2,
+      "maxGuestsPerUnit": 1
+    },
+    {
+      "roomTypeKey": "double",
+      "name": "Double room",
+      "displayLabel": "Double room",
+      "inventoryKind": "room_unit",
+      "baseCapacity": 2,
+      "maxGuestsPerUnit": 2
+    }
+  ],
+  "PackageProducts": [
+    {
+      "packageKey": "BeachReset",
+      "name": "Beach Reset",
+      "minParticipants": 3,
+      "maxParticipants": 8,
+      "standardRoomTypeKey": "dorm",
+      "preBlockedDormBeds": 3
+    },
+    {
+      "packageKey": "SurfAndSoul",
+      "name": "Surf & Soul",
+      "minParticipants": 4,
+      "maxParticipants": 8,
+      "standardRoomTypeKey": "dorm",
+      "preBlockedDormBeds": 4
+    },
+    {
+      "packageKey": "RootsAndRitual",
+      "name": "Roots & Ritual",
+      "minParticipants": 4,
+      "maxParticipants": 8,
+      "standardRoomTypeKey": "dorm",
+      "preBlockedDormBeds": 4
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+packageKey,name,minParticipants,maxParticipants,standardRoomTypeKey,preBlockedDormBeds
+BeachReset,Beach Reset,3,8,dorm,3
+SurfAndSoul,Surf & Soul,4,8,dorm,4
+RootsAndRitual,Roots & Ritual,4,8,dorm,4

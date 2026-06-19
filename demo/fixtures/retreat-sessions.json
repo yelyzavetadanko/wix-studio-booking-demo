@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "retreat_sess_0",
+    "retreatSessionId": "rt_sess_2026_09_20_dihya",
+    "retreatKey": "dihya",
+    "sessionStartDate": "2026-09-20",
+    "sessionEndDate": "2026-09-27",
+    "status": "open",
+    "minParticipantsSnapshot": 4,
+    "maxParticipantsSnapshot": 8,
+    "preBlockedDormBeds": 4,
+    "nightsOverride": 7,
+    "participantsBooked": 0,
+    "participantsLeft": 8,
+    "fallbackDecisionAtDaysBefore": 21,
+    "fallbackOptionsJson": "[\"switch_to_surf_stay\",\"switch_dates\",\"full_refund\"]",
+    "internalNotes": "Initial retreat session for Dihya.",
+    "createdAt": "2026-07-01T10:00:00Z",
+    "updatedAt": "2026-07-01T10:00:00Z"
+  },
+  {
+    "_id": "retreat_sess_1",
+    "retreatSessionId": "rt_sess_2026_10_11_anzar",
+    "retreatKey": "anzar",
+    "sessionStartDate": "2026-10-11",
+    "sessionEndDate": "2026-10-18",
+    "status": "open",
+    "minParticipantsSnapshot": 4,
+    "maxParticipantsSnapshot": 8,
+    "preBlockedDormBeds": 4,
+    "nightsOverride": 7,
+    "participantsBooked": 0,
+    "participantsLeft": 8,
+    "fallbackDecisionAtDaysBefore": 21,
+    "fallbackOptionsJson": "[\"switch_to_surf_stay\",\"switch_dates\",\"full_refund\"]",
+    "internalNotes": "Initial retreat session for Anzar.",
+    "createdAt": "2026-07-01T10:00:00Z",
+    "updatedAt": "2026-07-01T10:00:00Z"
+  }
+]

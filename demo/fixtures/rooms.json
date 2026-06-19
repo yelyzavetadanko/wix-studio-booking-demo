@@ -1,0 +1,29 @@
+[
+  {
+    "_id": "room_dorm",
+    "roomTypeKey": "dorm",
+    "name": "Dorm bed",
+    "displayLabel": "Dorm bed",
+    "inventoryKind": "bed",
+    "baseCapacity": 8,
+    "maxGuestsPerUnit": 1
+  },
+  {
+    "_id": "room_single",
+    "roomTypeKey": "single",
+    "name": "Single room",
+    "displayLabel": "Single room",
+    "inventoryKind": "room_unit",
+    "baseCapacity": 2,
+    "maxGuestsPerUnit": 1
+  },
+  {
+    "_id": "room_double",
+    "roomTypeKey": "double",
+    "name": "Double room",
+    "displayLabel": "Double room",
+    "inventoryKind": "room_unit",
+    "baseCapacity": 2,
+    "maxGuestsPerUnit": 2
+  }
+]

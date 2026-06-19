@@ -1,0 +1,9 @@
+{
+  "name": "wix-studio-booking-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fixtures": "node scripts/csv-to-fixtures.mjs",
+    "validate-fixtures": "node scripts/validate-fixtures.mjs"
+  }
+}

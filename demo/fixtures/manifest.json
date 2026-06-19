@@ -1,0 +1,18 @@
+{
+  "generatedAt": "2026-06-19T16:55:57.563Z",
+  "source": "seed-csv + seed-defaults.json",
+  "collections": [
+    "rooms",
+    "package-products",
+    "package-sessions",
+    "pricing-rules",
+    "activity-catalog",
+    "retreat-products",
+    "retreat-sessions",
+    "inventory-blocks",
+    "inventory-unit-closures",
+    "bookings",
+    "enquiries",
+    "bed-locks"
+  ]
+}

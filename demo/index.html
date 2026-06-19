@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wix Studio Booking Platform — Portfolio Demo</title>
+  <meta name="description" content="Interactive demo of a custom Wix Studio booking system: multi-flow guest wizard and admin dashboards." />
+  <link rel="stylesheet" href="./styles/demo-shell.css" />
+</head>
+<body>
+  <header class="demo-header">
+    <div class="demo-header__inner">
+      <div>
+        <p class="demo-kicker">Portfolio demo · Wix Studio &amp; Velo</p>
+        <h1>Surf hospitality booking platform</h1>
+        <p class="demo-lead">
+          Custom booking engine built for a client site on Wix Studio — guest flows, pricing rules,
+          availability logic, and internal admin dashboards. This preview runs the same Web Components
+          without connecting to production Wix CMS.
+        </p>
+      </div>
+      <div class="demo-banner" role="status">
+        Demo mode — submissions are saved in this browser session only.
+      </div>
+    </div>
+  </header>
+
+  <main class="demo-main">
+    <section class="demo-card">
+      <h2>Guest booking wizard</h2>
+      <p>Full multi-flow custom element: stays, packages, enquiries, retreats.</p>
+      <div class="demo-flow-grid">
+        <a class="demo-btn" href="./booking.html?flow=bnb">B&amp;B stay</a>
+        <a class="demo-btn" href="./booking.html?flow=surf_stay">Surf &amp; Stay</a>
+        <a class="demo-btn" href="./booking.html?flow=package_beach_reset">Package · Beach Reset</a>
+        <a class="demo-btn" href="./booking.html?flow=package_roots_ritual">Package · Roots &amp; Ritual</a>
+        <a class="demo-btn" href="./booking.html?flow=package_surf_soul">Package · Surf &amp; Soul</a>
+        <a class="demo-btn" href="./booking.html?flow=enquiry">Activity enquiry</a>
+        <a class="demo-btn" href="./booking.html?flow=retreats">Retreats</a>
+        <a class="demo-btn" href="./booking.html?flow=retreat_dihya">Retreat · Dihya</a>
+        <a class="demo-btn" href="./booking.html?flow=retreat_anzar">Retreat · Anzar</a>
+      </div>
+    </section>
+
+    <section class="demo-card">
+      <h2>Admin dashboards</h2>
+      <p>Internal tools for bookings, sessions, retreats, and availability (coming online in next milestones).</p>
+      <div class="demo-flow-grid">
+        <a class="demo-btn demo-btn--secondary" href="./admin/stays.html">Stay bookings</a>
+        <a class="demo-btn demo-btn--secondary" href="./admin/sessions.html">Package sessions</a>
+        <a class="demo-btn demo-btn--secondary" href="./admin/retreats.html">Retreat sessions</a>
+        <a class="demo-btn demo-btn--secondary" href="./admin/availability.html">Availability</a>
+      </div>
+    </section>
+
+    <section class="demo-card demo-card--muted">
+      <h2>Stack</h2>
+      <ul class="demo-list">
+        <li>Custom Element UI (Shadow DOM, design tokens)</li>
+        <li>Velo page host pattern → demo bridge + browser runtime</li>
+        <li>CMS-backed rules: rooms, pricing, sessions, activities, inventory</li>
+        <li>Admin dashboards as separate custom elements</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="demo-footer">
+    <p>Built by Yelyzaveta Danko · Wix Studio &amp; Velo developer</p>
+  </footer>
+</body>
+</html>

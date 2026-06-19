@@ -1,0 +1,33 @@
+ruleKey,flow,chargeType,roomTypeKey,occupancyMode,unitType,amount,currency,isActive,notes
+bnb_dorm_per_night,bnb,base,dorm,,per_person_per_night,19,EUR,true,Breakfast included
+bnb_single_per_night,bnb,base,single,single_occ,per_room_per_night,30,EUR,true,Breakfast included
+bnb_double_single_occ_per_night,bnb,base,double,single_occ,per_room_per_night,38,EUR,true,Breakfast included
+bnb_double_double_occ_per_night,bnb,base,double,double_occ,per_room_per_night,42,EUR,true,Breakfast included
+bnb_dinner_standard,bnb,addon_dinner,,single_occ,per_person_per_night,8,EUR,true,Standard dinner
+bnb_dinner_double_single_occ,bnb,addon_dinner,double,single_occ,per_room_per_night,8,EUR,true,Double room dinner price for 1
+bnb_dinner_double_double_occ,bnb,addon_dinner,double,double_occ,per_room_per_night,11,EUR,true,Double room dinner price for 2
+bnb_transfer_airport,bnb,addon_transfer_airport,,,per_vehicle_per_trip,30,EUR,true,Max 6 guests per vehicle
+bnb_transfer_bus,bnb,addon_transfer_bus,,,per_vehicle_per_trip,15,EUR,true,Max 6 guests per vehicle
+surf_stay_base_dorm_per_night,surf_stay,base,dorm,,per_person_per_night,79,EUR,true,Includes surf lesson equipment lunch transport
+surf_stay_upgrade_single,surf_stay,upgrade,single,single_occ,per_person_per_night,11,EUR,true,Upgrade over dorm base
+surf_stay_upgrade_double_single_occ,surf_stay,upgrade,double,single_occ,per_room_per_night,19,EUR,true,Upgrade over dorm base
+surf_stay_upgrade_double_double_occ,surf_stay,upgrade,double,double_occ,per_room_per_night,83,EUR,true,Upgrade over dorm base
+surf_stay_dinner_standard,surf_stay,addon_dinner,,single_occ,per_person_per_night,8,EUR,true,Standard dinner
+surf_stay_dinner_double_single_occ,surf_stay,addon_dinner,double,single_occ,per_room_per_night,7,EUR,true,Double room dinner price for 1
+surf_stay_dinner_double_double_occ,surf_stay,addon_dinner,double,double_occ,per_room_per_night,8,EUR,true,Double room dinner price for 2
+surf_stay_transfer_airport,surf_stay,addon_transfer_airport,,,per_vehicle_per_trip,30,EUR,true,Same transfer rules as BnB
+surf_stay_transfer_bus,surf_stay,addon_transfer_bus,,,per_vehicle_per_trip,15,EUR,true,Same transfer rules as BnB
+package_beach_reset_base,package_beach_reset,base,dorm,,per_person_per_package,270,EUR,true,All meals included
+package_beach_reset_upgrade_single,package_beach_reset,upgrade,single,single_occ,per_person_per_package,45,EUR,true,Upgrade over dorm base
+package_beach_reset_upgrade_double_single_occ,package_beach_reset,upgrade,double,single_occ,per_person_per_package,85,EUR,true,Upgrade over dorm base
+package_beach_reset_upgrade_double_double_occ,package_beach_reset,upgrade,double,double_occ,per_person_per_package,65,EUR,true,Per person when 2 share
+package_beach_reset_transfer_airport,package_beach_reset,addon_transfer_airport,,,per_vehicle_per_trip,30,EUR,true,Not included in package
+package_beach_reset_transfer_bus,package_beach_reset,addon_transfer_bus,,,per_vehicle_per_trip,15,EUR,true,Not included in package
+package_roots_ritual_base,package_roots_ritual,base,dorm,,per_person_per_package,650,EUR,true,Meals and transfers included
+package_roots_ritual_upgrade_single,package_roots_ritual,upgrade,single,single_occ,per_person_per_package,65,EUR,true,Upgrade over dorm base
+package_roots_ritual_upgrade_double_single_occ,package_roots_ritual,upgrade,double,single_occ,per_person_per_package,125,EUR,true,Upgrade over dorm base
+package_roots_ritual_upgrade_double_double_occ,package_roots_ritual,upgrade,double,double_occ,per_person_per_package,105,EUR,true,Per person when 2 share
+package_surf_soul_base,package_surf_soul,base,dorm,,per_person_per_package,760,EUR,true,Meals and transfers included
+package_surf_soul_upgrade_single,package_surf_soul,upgrade,single,single_occ,per_person_per_package,100,EUR,true,Upgrade over dorm base
+package_surf_soul_upgrade_double_single_occ,package_surf_soul,upgrade,double,single_occ,per_person_per_package,160,EUR,true,Upgrade over dorm base
+package_surf_soul_upgrade_double_double_occ,package_surf_soul,upgrade,double,double_occ,per_person_per_package,140,EUR,true,Per person when 2 share

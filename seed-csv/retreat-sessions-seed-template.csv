@@ -1,0 +1,3 @@
+retreatSessionId,retreatKey,sessionStartDate,sessionEndDate,status,minParticipantsSnapshot,maxParticipantsSnapshot,preBlockedDormBeds,nightsOverride,participantsBooked,participantsLeft,fallbackDecisionAtDaysBefore,fallbackOptionsJson,internalNotes,createdAt,updatedAt
+rt_sess_2026_09_20_dihya,dihya,2026-09-20,2026-09-27,open,4,8,4,7,0,8,21,"[""switch_to_surf_stay"",""switch_dates"",""full_refund""]",Initial retreat session for Dihya.,2026-07-01T10:00:00Z,2026-07-01T10:00:00Z
+rt_sess_2026_10_11_anzar,anzar,2026-10-11,2026-10-18,open,4,8,4,7,0,8,21,"[""switch_to_surf_stay"",""switch_dates"",""full_refund""]",Initial retreat session for Anzar.,2026-07-01T10:00:00Z,2026-07-01T10:00:00Z

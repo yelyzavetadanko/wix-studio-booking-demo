@@ -1,0 +1,4 @@
+roomTypeKey,name,displayLabel,inventoryKind,baseCapacity,maxGuestsPerUnit
+dorm,Dorm bed,Dorm bed,bed,8,1
+single,Single room,Single room,room_unit,2,1
+double,Double room,Double room,room_unit,2,2
