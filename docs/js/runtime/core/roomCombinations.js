@@ -1,5 +1,5 @@
-import { ROOM_KEYS } from '../core/config';
-import { getRoomAvailability } from '../core/availability';
+import { ROOM_KEYS } from '../core/config.js';
+import { getRoomAvailability } from '../core/availability.js';
 
 export async function suggestRoomCombinations(guestCount, startDateKey, endDateKey) {
   const [dorm, single, double_] = await Promise.all([

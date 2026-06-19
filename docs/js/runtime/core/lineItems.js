@@ -1,5 +1,5 @@
 import wixData from '../shims/wixData.js';
-import { COLLECTIONS, LINE_ITEM_TYPE } from '../core/config';
+import { COLLECTIONS, LINE_ITEM_TYPE } from '../core/config.js';
 
 export async function saveBookingLineItems(bookingId, items, options = {}) {
   const currency = options.currency || 'USD';

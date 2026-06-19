@@ -211,6 +211,9 @@ function readContext() {
     enquiryType: retreatMode ? 'custom_retreat' : normalizedEnquiryType || inferredEnquiryType,
     roomPreset: q.roomPreset || null,
     activityKey,
+    checkIn: q.checkIn || q.arrival || null,
+    checkOut: q.checkOut || q.departure || null,
+    guestCount: q.guests ? Math.max(1, Number(q.guests) || 1) : null,
     customRetreatRequestMode,
     retreatBrowseMode,
   };
@@ -1000,6 +1003,9 @@ $w.onReady(() => {
     customRetreatChosen: context.customRetreatRequestMode === true,
     wholeHouseEnquiry: false,
     guestCountry: '',
+    guestCount: context.guestCount || 1,
+    checkIn: context.checkIn || '',
+    checkOut: context.checkOut || '',
   };
   const theme = {
     accent: '#de7a45',

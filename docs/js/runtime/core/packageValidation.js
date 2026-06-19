@@ -1,7 +1,7 @@
 import wixData from '../shims/wixData.js';
-import { COLLECTIONS, PACKAGE_LIMITS_FALLBACK } from '../core/config';
-import { getRoomAvailability, getPackageSessionParticipantCount } from '../core/availability';
-import { toDateKey } from '../core/dateUtils';
+import { COLLECTIONS, PACKAGE_LIMITS_FALLBACK } from '../core/config.js';
+import { getRoomAvailability, getPackageSessionParticipantCount } from '../core/availability.js';
+import { toDateKey } from '../core/dateUtils.js';
 
 function nightsBetweenKeys(startDateKey, endDateKey) {
   const start = new Date(`${startDateKey}T12:00:00Z`).getTime();

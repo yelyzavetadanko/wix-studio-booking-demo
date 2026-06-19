@@ -1,4 +1,4 @@
-import { INVENTORY_KIND, ROOM_KEYS } from '../core/config';
+import { INVENTORY_KIND, ROOM_KEYS } from '../core/config.js';
 
 export function normalizeRoomRow(row) {
   const roomTypeKey = row.roomTypeKey || '';

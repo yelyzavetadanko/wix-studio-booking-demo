@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "fixtures": "node scripts/csv-to-fixtures.mjs",
+    "seed": "node scripts/seed-demo-data.mjs",
     "validate-fixtures": "node scripts/validate-fixtures.mjs"
   }
 }

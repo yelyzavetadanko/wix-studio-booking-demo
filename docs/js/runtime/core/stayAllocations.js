@@ -1,6 +1,6 @@
-import { getRoomsMap } from '../core/availability';
-import { ROOM_KEYS, INVENTORY_KIND } from '../core/config';
-import { normalizeRoomRow } from '../core/inventoryHelpers';
+import { getRoomsMap } from '../core/availability.js';
+import { ROOM_KEYS, INVENTORY_KIND } from '../core/config.js';
+import { normalizeRoomRow } from '../core/inventoryHelpers.js';
 
 export async function validateStayGuestAssignment(guestCount, lines) {
   const roomsMap = await getRoomsMap();

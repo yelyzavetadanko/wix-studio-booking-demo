@@ -1,30 +1,24 @@
 # Implementation milestones
 
-## Done (M0–M1)
-- [x] Repo scaffold `wix-studio-booking-demo/`
-- [x] Public GitHub repo + Pages workflow
-- [x] Landing + flow links
-- [x] Custom elements copied (booking + 4 admin CEs)
-- [x] `csv-to-fixtures.mjs` + baseline JSON from seed CSV
-- [x] `demoStore` (fixtures + sessionStorage mutations)
-- [x] Wix shims: `$w`, `wixLocation`, `wixData`, `webMethod`, meta pixel no-op
-- [x] Ported core backend modules + `bookingAvailability` / `bookingAddons` API
-- [x] Demo checkout (`bookingCheckout.demo.js`) — local save only
-- [x] Booking page bridge (`bookingPage.js` ported from production)
-- [x] `booking.html` bootstrap
+## Done (M0–M2)
+- [x] Repo scaffold, GitHub Pages from `/docs`
+- [x] Custom elements (booking + 4 admin CEs)
+- [x] Fixture pipeline + `demoStore`
+- [x] Wix shims + ported availability/addons APIs
+- [x] Demo checkout + booking host bridge
+- [x] **ESM import fix** — guest host loads in browser
+- [x] **Demo fixtures** — future package sessions, seed bookings/enquiries
+- [x] **Sample URL links** on landing + booking hint banner
+- [x] **Availability fallback** for portfolio walkthroughs
 
-## In progress (M2)
-- [x] `wixData` shim: pagination + `gt`/`lt` filters for availability module
-- [ ] Browser QA each flow; fix runtime/import issues
-- [ ] Port remaining checkout logic if demo responses miss fields CE expects
-- [ ] Theme/assets polish
-
-## Next (M3) — admin dashboards
-- [ ] Port `page-admin-stays.js` → `adminStayHost.js`
-- [ ] Port `page-admin-sessions.js`, retreats, availability hosts
-- [ ] Wire admin API to demoStore
+## Done (M3) — admin dashboards
+- [x] Stay bookings — `adminStayHost.js` + seed data
+- [x] Package sessions — `adminSessionsHost.js`
+- [x] Retreat sessions — `adminRetreatsHost.js`
+- [x] Availability grid — `adminAvailabilityHost.js`
 
 ## Next (M4) — portfolio polish
+- [ ] Browser QA all 9 flows on live Pages (post-push)
 - [ ] README screenshots/GIF
 - [ ] Client name in copy (when confirmed)
 - [ ] Prod CMS CSV merge into fixtures
@@ -34,9 +28,14 @@
 ```bash
 cd wix-studio-booking-demo
 npm run fixtures
-npx serve demo
+npx serve docs
 ```
 
-Open `http://localhost:3000/booking.html?flow=bnb`
+| Flow | Sample URL |
+|------|------------|
+| B&B | `booking.html?flow=bnb&checkIn=2026-07-01&checkOut=2026-07-05&guests=2` |
+| Beach Reset | `booking.html?flow=package_beach_reset&sessionId=sess_BeachReset_jul` |
+| Activity enquiry | `booking.html?flow=enquiry&activityKey=sandboarding` |
+| Dihya retreat | `booking.html?flow=retreat_dihya&retreatSessionId=rt_sess_2026_09_20_dihya` |
 
-Reset session data: add `&reset=1` to URL.
+Reset session: `&reset=1`

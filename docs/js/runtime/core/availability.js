@@ -5,11 +5,11 @@ import {
   BOOKING_ACTIVE_INVENTORY_STATUSES,
   RETREAT_OCCUPIED_STATUSES,
   ROOM_KEYS,
-} from '../core/config';
-import { enumerateDateKeysCheckoutExclusive, safeJsonParse, toDateKey } from '../core/dateUtils';
-import { normalizeRoomRow, allocationQuantityForLock } from '../core/inventoryHelpers';
-import { getPreBlockedDormBeds } from '../core/packageRules';
-import { validatePackageBookingExtended } from '../core/packageValidation';
+} from '../core/config.js';
+import { enumerateDateKeysCheckoutExclusive, safeJsonParse, toDateKey } from '../core/dateUtils.js';
+import { normalizeRoomRow, allocationQuantityForLock } from '../core/inventoryHelpers.js';
+import { getPreBlockedDormBeds } from '../core/packageRules.js';
+import { validatePackageBookingExtended } from '../core/packageValidation.js';
 
 const ACTIVE_BOOKING = BOOKING_ACTIVE_INVENTORY_STATUSES;
 const PACKAGE_RESERVE_STATUSES = ['open', 'closed', 'sold_out'];

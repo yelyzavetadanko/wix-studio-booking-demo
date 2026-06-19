@@ -327,6 +327,69 @@ async function getRoomsForUi(bookingFlow, checkIn, checkOut, bookingContext) {
   ];
 }
 
+function totalGuestSlotsFromOptions(options = []) {
+  return (options || []).reduce((acc, row) => {
+    const cap = Math.max(1, Number(row.capacityPerUnit || 1));
+    return acc + Math.max(0, Number(row.available || 0)) * cap;
+  }, 0);
+}
+
+async function buildDemoFallbackRoomOptions(bookingFlow) {
+  const pricingMap = await getPricingMapForFlow(bookingFlow);
+  const roomRows = await fetchAll(wixData.query(COLLECTIONS.ROOMS));
+  const roomMap = {};
+  for (const row of roomRows) {
+    roomMap[row.roomTypeKey] = row;
+  }
+  const fallbackAvailable = { dorm: 8, single: 2, double: 2 };
+  return [
+    {
+      roomTypeKey: 'dorm',
+      title: 'Dorm bed',
+      meta: `Available beds: ${fallbackAvailable.dorm} | Shared (demo fallback)`,
+      available: fallbackAvailable.dorm,
+      image: toPublicImageUrl(roomMap.dorm?.image),
+      capacityPerUnit: 1,
+      unitPrice: pricingMap.dorm?.unitPrice || 0,
+      currency: pricingMap.dorm?.currency || 'EUR',
+      priceLabel: pricingMap.dorm?.priceLabel || '',
+      priceMode: pricingMap.dorm?.priceMode || '',
+      ruleKey: pricingMap.dorm?.ruleKey || '',
+      demoFallback: true,
+    },
+    {
+      roomTypeKey: 'single',
+      title: 'Single room',
+      meta: `Available units: ${fallbackAvailable.single} | Private (demo fallback)`,
+      available: fallbackAvailable.single,
+      image: toPublicImageUrl(roomMap.single?.image),
+      capacityPerUnit: 1,
+      unitPrice: pricingMap.single?.unitPrice || 0,
+      currency: pricingMap.single?.currency || 'EUR',
+      priceLabel: pricingMap.single?.priceLabel || '',
+      priceMode: pricingMap.single?.priceMode || '',
+      ruleKey: pricingMap.single?.ruleKey || '',
+      demoFallback: true,
+    },
+    {
+      roomTypeKey: 'double',
+      title: 'Double room',
+      meta: `Available units: ${fallbackAvailable.double} | Up to 2 guests (demo fallback)`,
+      available: fallbackAvailable.double,
+      image: toPublicImageUrl(roomMap.double?.image),
+      capacityPerUnit: 2,
+      unitPrice: pricingMap.double?.unitPrice || 0,
+      currency: pricingMap.double?.currency || 'EUR',
+      priceLabel: pricingMap.double?.priceLabel || '',
+      priceMode: pricingMap.double?.priceMode || '',
+      ruleKey: pricingMap.double?.ruleKey || '',
+      singleOccPrice: pricingMap.double?.singleOccPrice || 0,
+      doubleOccPrice: pricingMap.double?.doubleOccPrice || 0,
+      demoFallback: true,
+    },
+  ];
+}
+
 export const loadStayRoomOptions = webMethod(Permissions.Anyone, async (payload) => {
   const checkIn = payload?.checkIn;
   const checkOut = payload?.checkOut;
@@ -341,7 +404,10 @@ export const loadStayRoomOptions = webMethod(Permissions.Anyone, async (payload)
     };
   }
 
-  const options = await getRoomsForUi(bookingFlow, checkIn, checkOut, bookingContext);
+  let options = await getRoomsForUi(bookingFlow, checkIn, checkOut, bookingContext);
+  if (totalGuestSlotsFromOptions(options) <= 0) {
+    options = await buildDemoFallbackRoomOptions(bookingFlow);
+  }
   return {
     ok: true,
     options,
@@ -460,7 +526,10 @@ export const loadPackageRoomOptions = webMethod(Permissions.Anyone, async (paylo
     RootsAndRitual: BOOKING_FLOW.PACKAGE_ROOTS_RITUAL,
     SurfAndSoul: BOOKING_FLOW.PACKAGE_SURF_SOUL,
   }[String(session.packageKey || '')] || 'package_beach_reset';
-  const options = await getRoomsForUi(resolvedFlow, checkIn, checkOut, 'package');
+  let options = await getRoomsForUi(resolvedFlow, checkIn, checkOut, 'package');
+  if (totalGuestSlotsFromOptions(options) <= 0) {
+    options = await buildDemoFallbackRoomOptions(resolvedFlow);
+  }
 
   const productRes = await wixData
     .query(COLLECTIONS.PACKAGE_PRODUCTS)

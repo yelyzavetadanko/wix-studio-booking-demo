@@ -1,4 +1,4 @@
-import { DEFAULT_PREBLOCKED_DORM } from '../core/config';
+import { DEFAULT_PREBLOCKED_DORM } from '../core/config.js';
 
 export function getPreBlockedDormBeds(session, product) {
   if (session && session.preBlockedDormBeds != null && session.preBlockedDormBeds !== '') {

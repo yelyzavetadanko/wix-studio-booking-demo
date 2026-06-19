@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin — Availability (coming soon)</title>
+  <title>Admin — Availability</title>
   <link rel="stylesheet" href="../styles/demo-shell.css" />
 </head>
-<body>
+<body class="demo-booking-page">
   <header class="demo-header demo-header--compact">
     <div class="demo-header__inner">
       <a class="demo-back" href="../index.html">← All demos</a>
+      <div class="demo-banner" role="status">Admin demo — session data only</div>
     </div>
   </header>
-  <main class="demo-main">
-    <section class="demo-card">
-      <h2>Availability manager</h2>
-      <p>Coming in milestone 4.</p>
-    </section>
+  <main class="demo-booking-host">
+    <availability-manager-ce id="availabilityManagerElement"></availability-manager-ce>
   </main>
+  <script type="module" src="../js/runtime/bootstrapAdminAvailability.js"></script>
 </body>
 </html>

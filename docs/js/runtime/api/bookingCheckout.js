@@ -6,7 +6,7 @@ import { sendAdminBookingEmail } from '../core/bookingNotifications.js';
 import { sendGuestBookingAcknowledgement } from '../core/guestNotifications.js';
 import { Permissions, webMethod } from '../shims/webMethod.js';
 import { getActivitiesByKeys, validateActivityKeys } from '../core/activities.js';
-import { dateKeyToDate, toDateKey as toDateKeyNormalized } from '../core/dateUtils';
+import { dateKeyToDate, toDateKey as toDateKeyNormalized } from '../core/dateUtils.js';
 import { validateRoomOnlyBooking } from '../core/availability.js';
 import { validateStayGuestAssignment } from '../core/stayAllocations.js';
 import { sendLead as sendCapiLead } from '../core/metaCapi.js';

@@ -1,29 +1,69 @@
 [
   {
-    "_id": "sess_BeachReset_0",
+    "_id": "sess_BeachReset_jul",
     "packageKey": "BeachReset",
-    "sessionStartDate": "2026-05-14",
-    "sessionEndDate": "2026-05-17",
+    "sessionStartDate": "2026-07-10",
+    "sessionEndDate": "2026-07-13",
     "status": "open",
     "preBlockedDormBeds": 3,
     "minParticipantsSnapshot": 3,
     "maxParticipantsSnapshot": 8
   },
   {
-    "_id": "sess_RootsAndRitual_1",
+    "_id": "sess_BeachReset_aug",
+    "packageKey": "BeachReset",
+    "sessionStartDate": "2026-08-07",
+    "sessionEndDate": "2026-08-10",
+    "status": "open",
+    "preBlockedDormBeds": 3,
+    "minParticipantsSnapshot": 3,
+    "maxParticipantsSnapshot": 8
+  },
+  {
+    "_id": "sess_BeachReset_sep",
+    "packageKey": "BeachReset",
+    "sessionStartDate": "2026-09-04",
+    "sessionEndDate": "2026-09-07",
+    "status": "open",
+    "preBlockedDormBeds": 3,
+    "minParticipantsSnapshot": 3,
+    "maxParticipantsSnapshot": 8
+  },
+  {
+    "_id": "sess_RootsAndRitual_jul",
     "packageKey": "RootsAndRitual",
-    "sessionStartDate": "2026-06-01",
-    "sessionEndDate": "2026-06-06",
+    "sessionStartDate": "2026-07-06",
+    "sessionEndDate": "2026-07-11",
     "status": "open",
     "preBlockedDormBeds": 4,
     "minParticipantsSnapshot": 4,
     "maxParticipantsSnapshot": 8
   },
   {
-    "_id": "sess_SurfAndSoul_2",
+    "_id": "sess_RootsAndRitual_aug",
+    "packageKey": "RootsAndRitual",
+    "sessionStartDate": "2026-08-03",
+    "sessionEndDate": "2026-08-08",
+    "status": "open",
+    "preBlockedDormBeds": 4,
+    "minParticipantsSnapshot": 4,
+    "maxParticipantsSnapshot": 8
+  },
+  {
+    "_id": "sess_SurfAndSoul_jul",
     "packageKey": "SurfAndSoul",
-    "sessionStartDate": "2026-06-21",
-    "sessionEndDate": "2026-06-28",
+    "sessionStartDate": "2026-07-20",
+    "sessionEndDate": "2026-07-27",
+    "status": "open",
+    "preBlockedDormBeds": 4,
+    "minParticipantsSnapshot": 4,
+    "maxParticipantsSnapshot": 8
+  },
+  {
+    "_id": "sess_SurfAndSoul_aug",
+    "packageKey": "SurfAndSoul",
+    "sessionStartDate": "2026-08-17",
+    "sessionEndDate": "2026-08-24",
     "status": "open",
     "preBlockedDormBeds": 4,
     "minParticipantsSnapshot": 4,
