@@ -26,8 +26,9 @@
 ### GitHub
 - [x] Public repo created: https://github.com/yelyzavetadanko/wix-studio-booking-demo
 - [x] Initial push to `main`
-- [ ] GitHub Pages enabled from `/docs` (pending API call)
-- Note: GitHub Actions workflow deferred — OAuth token lacks `workflow` scope
+- [x] GitHub Pages enabled from `/docs`
+- Live URL: https://yelyzavetadanko.github.io/wix-studio-booking-demo/
+- Note: GitHub Actions workflow file exists locally only — push blocked until token gets `workflow` scope (Pages uses legacy `/docs` deploy for now)
 
 ### M4 — Portfolio polish (pending)
 - README live URL after Pages deploy
