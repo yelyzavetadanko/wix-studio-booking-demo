@@ -1,27 +1,36 @@
 # Wix Studio Booking Platform — Interactive Portfolio Demo
 
-Live demo: **[yelyzavetadanko.github.io/wix-studio-booking-demo](https://yelyzavetadanko.github.io/wix-studio-booking-demo/)** (GitHub Pages from `/docs`)
-
-Repository: **[github.com/yelyzavetadanko/wix-studio-booking-demo](https://github.com/yelyzavetadanko/wix-studio-booking-demo)**
-
-Progress log: [`project-docs/PROJECT_LOG.md`](project-docs/PROJECT_LOG.md)
+**Live demo:** [yelyzavetadanko.github.io/wix-studio-booking-demo](https://yelyzavetadanko.github.io/wix-studio-booking-demo/)  
+**Repository:** [github.com/yelyzavetadanko/wix-studio-booking-demo](https://github.com/yelyzavetadanko/wix-studio-booking-demo)  
+**Progress log:** [`project-docs/PROJECT_LOG.md`](project-docs/PROJECT_LOG.md)
 
 Custom booking system built for a **surf hospitality client on Wix Studio**: multi-flow guest wizard, pricing/availability rules, and internal admin dashboards. This repository showcases the **same Custom Element UI** used in production, running in the browser with a **mock runtime** instead of Wix Velo/CMS.
 
 > **Demo disclaimer:** No production data is written. Submissions persist in `sessionStorage` for the current browser session only.
+
+## Quick links
+
+| Demo | URL |
+|------|-----|
+| Landing | [/](https://yelyzavetadanko.github.io/wix-studio-booking-demo/) |
+| B&B (sample dates) | [/booking.html?flow=bnb&checkIn=2026-07-01&checkOut=2026-07-05&guests=2](https://yelyzavetadanko.github.io/wix-studio-booking-demo/booking.html?flow=bnb&checkIn=2026-07-01&checkOut=2026-07-05&guests=2) |
+| Admin stays | [/admin/stays.html?reset=1](https://yelyzavetadanko.github.io/wix-studio-booking-demo/admin/stays.html?reset=1) |
+| Admin availability | [/admin/availability.html?month=2026-07&reset=1](https://yelyzavetadanko.github.io/wix-studio-booking-demo/admin/availability.html?month=2026-07&reset=1) |
+
+Append `&reset=1` to clear browser session mutations and reload seed data.
 
 ## What's included
 
 ### Guest booking (`booking-wizard-ce`)
 - Flows: `bnb`, `surf_stay`, package flows, `enquiry`, `retreats`, retreat variants
 - Shadow DOM UI, design tokens, multi-step wizard + cart
-- Availability & pricing driven by fixture data (CMS export)
+- Availability & pricing driven by fixture data (CMS-shaped JSON)
 
-### Admin dashboards (in progress)
+### Admin dashboards
 - `stay-manager-ce` — stay bookings & enquiries
 - `session-manager-ce` — package sessions
 - `retreat-session-manager-ce` — retreat sessions
-- `availability-manager-ce` — inventory calendar
+- `availability-manager-ce` — inventory calendar (open / closed / hold modals)
 
 ## Architecture
 
@@ -42,23 +51,11 @@ npm run fixtures          # regenerate docs/fixtures from seed-csv/
 npx serve docs            # open http://localhost:3000
 ```
 
-Open:
-- Landing: `/`
-- Booking: `/booking.html?flow=bnb`
-- Reset demo data: `/booking.html?flow=bnb&reset=1`
-
-## Regenerating fixtures
-
-1. Export Wix CMS collections to CSV
-2. Place files in `seed-csv/` (see `docs/data-sources.md`)
-3. Run `npm run fixtures`
-
 ## Deploy to GitHub Pages
 
-1. Create public repo and push this folder
-2. **Settings → Pages → Build and deployment → Deploy from branch**
-3. Branch: `main`, folder: `/demo`
-4. Site URL: `https://<user>.github.io/<repo>/`
+1. Push to `main`
+2. **Settings → Pages → Deploy from branch**
+3. Branch: `main`, folder: **`/docs`**
 
 ## Author
 
