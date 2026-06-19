@@ -35,8 +35,8 @@ export async function initDemoStore(basePath = '../fixtures/') {
       const parsed = JSON.parse(saved);
       for (const key of ['bookings', 'enquiries', 'bed-locks', 'inventory-unit-closures', 'package-sessions', 'retreat-sessions']) {
         if (!Array.isArray(parsed[key])) continue;
-        const keepFixtureSeed = (key === 'bookings' || key === 'enquiries') && parsed[key].length === 0;
-        if (!keepFixtureSeed) cache[key] = parsed[key];
+        if (parsed[key].length === 0) continue;
+        cache[key] = parsed[key];
       }
     }
   } catch (_) {

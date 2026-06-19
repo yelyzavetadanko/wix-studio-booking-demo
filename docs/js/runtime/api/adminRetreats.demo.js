@@ -97,8 +97,12 @@ export async function listAdminRetreatSessions(input = {}) {
 export async function listAdminRetreatEnquiries(input = {}) {
   getStore();
   const status = String(input.status || '').trim();
+  const manualPaymentStatus = String(input.manualPaymentStatus || '').trim();
   let rows = queryCollection('enquiries').filter((r) => String(r.enquiryType || '') === 'custom_retreat');
   if (status) rows = rows.filter((r) => String(r.status) === status);
+  if (manualPaymentStatus) {
+    rows = rows.filter((r) => String(r.manualPaymentStatus) === manualPaymentStatus);
+  }
   rows.sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')));
   return { ok: true, enquiries: rows.map(mapEnquiry) };
 }
@@ -142,7 +146,8 @@ export async function updateAdminRetreatSession(input = {}) {
   const sessionId = String(input.sessionId || '').trim();
   const existing = queryCollection('retreat-sessions').find((r) => String(r._id) === sessionId);
   if (!existing) return { ok: false, message: 'Session not found.' };
-  const row = { ...existing, ...(input.session || {}), _id: sessionId, demo: true };
+  const patch = input.patch || input.session || {};
+  const row = { ...existing, ...patch, _id: sessionId, demo: true };
   upsertCollectionRow('retreat-sessions', row);
   persistDemoStore();
   const { byKey } = loadProducts();
@@ -171,7 +176,10 @@ export async function markAdminRetreatEnquiryPaymentLinkSent(input = {}) {
 export async function setAdminRetreatEnquiryPaymentStatus(input = {}) {
   getStore();
   const enquiryId = String(input.enquiryId || '').trim();
-  const manualPaymentStatus = String(input.manualPaymentStatus || '').trim();
+  const manualPaymentStatus = String(input.manualPaymentStatus || input.status || '').trim();
+  if (!enquiryId || !manualPaymentStatus) {
+    return { ok: false, message: 'Missing enquiryId or status.' };
+  }
   const row = queryCollection('enquiries').find((r) => String(r.enquiryId || r._id) === enquiryId);
   if (!row) return { ok: false, message: 'Enquiry not found.' };
   upsertCollectionRow('enquiries', { ...row, manualPaymentStatus, demo: true });

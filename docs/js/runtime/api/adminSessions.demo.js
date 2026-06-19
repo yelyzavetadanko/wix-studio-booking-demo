@@ -180,7 +180,8 @@ export async function updateAdminPackageSession(input = {}) {
   if (!sessionId) return { ok: false, message: 'sessionId is required.' };
   const existing = queryCollection('package-sessions').find((r) => String(r._id) === sessionId);
   if (!existing) return { ok: false, message: 'Session not found.' };
-  const row = { ...existing, ...(input.session || {}), _id: sessionId, demo: true, updatedAt: new Date().toISOString() };
+  const patch = input.patch || input.session || {};
+  const row = { ...existing, ...patch, _id: sessionId, demo: true, updatedAt: new Date().toISOString() };
   upsertCollectionRow('package-sessions', row);
   persistDemoStore();
   const { byKey } = await loadProducts();
