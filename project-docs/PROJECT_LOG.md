@@ -15,11 +15,19 @@
 
 ### M2 — Runtime hardening (in progress)
 - Fixed `wixData` query shim: `gt`/`lt` filters + pagination shape (`hasNext`/`next`) for ported `availability.js`
-- Next: browser QA per flow, fix response-shape gaps, theme polish
+- Fixed broken `limit()` method in wixData shim
+- Restructured publish folder: site moved to `/docs` for GitHub Pages legacy deploy
 
-### M3 — Admin dashboards (pending)
-- Admin HTML stubs created; host bridges not wired yet
-- Planned: `adminStayHost`, `adminSessionsHost`, `adminRetreatsHost`, `adminAvailabilityHost`
+### M3 — Admin dashboards (started)
+- [x] `adminStay.demo.js` API wired to demoStore
+- [x] `adminStayHost.js` ported + `admin/stays.html` live shell
+- [ ] sessions, retreats, availability admin hosts
+
+### GitHub
+- [x] Public repo created: https://github.com/yelyzavetadanko/wix-studio-booking-demo
+- [x] Initial push to `main`
+- [ ] GitHub Pages enabled from `/docs` (pending API call)
+- Note: GitHub Actions workflow deferred — OAuth token lacks `workflow` scope
 
 ### M4 — Portfolio polish (pending)
 - README live URL after Pages deploy

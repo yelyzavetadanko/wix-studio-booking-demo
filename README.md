@@ -1,8 +1,10 @@
 # Wix Studio Booking Platform — Interactive Portfolio Demo
 
-Live demo: **[yelyzavetadanko.github.io/wix-studio-booking-demo](https://yelyzavetadanko.github.io/wix-studio-booking-demo/)** (GitHub Pages, deploys from `/demo` on push to `main`)
+Live demo: **[yelyzavetadanko.github.io/wix-studio-booking-demo](https://yelyzavetadanko.github.io/wix-studio-booking-demo/)** (GitHub Pages from `/docs`)
 
 Repository: **[github.com/yelyzavetadanko/wix-studio-booking-demo](https://github.com/yelyzavetadanko/wix-studio-booking-demo)**
+
+Progress log: [`project-docs/PROJECT_LOG.md`](project-docs/PROJECT_LOG.md)
 
 Custom booking system built for a **surf hospitality client on Wix Studio**: multi-flow guest wizard, pricing/availability rules, and internal admin dashboards. This repository showcases the **same Custom Element UI** used in production, running in the browser with a **mock runtime** instead of Wix Velo/CMS.
 
@@ -36,8 +38,8 @@ Fixtures JSON (+ sessionStorage mutations)
 ## Local development
 
 ```bash
-npm run fixtures          # regenerate demo/fixtures from seed-csv/
-npx serve demo            # open http://localhost:3000
+npm run fixtures          # regenerate docs/fixtures from seed-csv/
+npx serve docs            # open http://localhost:3000
 ```
 
 Open:

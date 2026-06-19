@@ -5,6 +5,7 @@ export async function submitStayBooking(payload = {}) {
   insertCollectionRow('bookings', {
     _id: bookingId,
     bookingId,
+    bookingType: 'room',
     bookingFlow: payload.bookingFlow || 'bnb',
     status: 'pending_admin_review',
     guestName: payload.guestName || '',

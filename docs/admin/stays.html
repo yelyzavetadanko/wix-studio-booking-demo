@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Admin — Stays (coming soon)</title>
+  <title>Admin — Stay bookings</title>
   <link rel="stylesheet" href="../styles/demo-shell.css" />
 </head>
-<body>
+<body class="demo-booking-page">
   <header class="demo-header demo-header--compact">
     <div class="demo-header__inner">
       <a class="demo-back" href="../index.html">← All demos</a>
-      <div class="demo-banner" role="status">Admin demo — milestone 4</div>
+      <div class="demo-banner" role="status">Admin demo — session data only</div>
     </div>
   </header>
-  <main class="demo-main">
-    <section class="demo-card">
-      <h2>Stay manager dashboard</h2>
-      <p>`stay-manager-ce` host bridge is scheduled for the next implementation milestone.</p>
-    </section>
+  <main class="demo-booking-host">
+    <stay-manager-ce id="stayManagerElement"></stay-manager-ce>
   </main>
+  <script type="module" src="../js/runtime/bootstrapAdminStays.js"></script>
 </body>
 </html>

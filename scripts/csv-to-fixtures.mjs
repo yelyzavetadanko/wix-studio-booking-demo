@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const SEED_DIR = path.join(ROOT, 'seed-csv');
-const OUT_DIR = path.join(ROOT, 'demo', 'fixtures');
+  const OUT_DIR = path.join(ROOT, 'docs', 'fixtures');
 
 function parseCsv(text) {
   const lines = text.replace(/^\uFEFF/, '').split(/\r?\n/).filter((l) => l.trim());
