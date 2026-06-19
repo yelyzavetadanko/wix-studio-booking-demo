@@ -11,6 +11,7 @@ import {
 import { $w } from '../shims/wixPublic.js';
 
 const LOG_PREFIX = '[admin-availability.page]';
+const DEMO_MONTH = '2026-07';
 
 function log(message, payload) {
   console.log(`${LOG_PREFIX} ${message}`, payload || '');
@@ -24,10 +25,7 @@ function toMonthKey(value = '') {
   const raw = String(value || '').trim();
   const m = /^(\d{4})-(\d{2})$/.exec(raw);
   if (m) return `${m[1]}-${m[2]}`;
-  const now = new Date();
-  const y = now.getUTCFullYear();
-  const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-  return `${y}-${month}`;
+  return DEMO_MONTH;
 }
 
 function readContext() {

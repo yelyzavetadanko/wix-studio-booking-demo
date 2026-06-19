@@ -1,1 +1,43 @@
-[]
+[
+  {
+    "_id": "closure_dorm_bed_2_2026_07_03",
+    "unitId": "dorm_bed_2",
+    "roomTypeKey": "dorm",
+    "dateKey": "2026-07-03",
+    "isOpen": false,
+    "source": "manual",
+    "note": "Maintenance — demo closed cell",
+    "demo": true
+  },
+  {
+    "_id": "closure_dorm_bed_5_2026_07_08",
+    "unitId": "dorm_bed_5",
+    "roomTypeKey": "dorm",
+    "dateKey": "2026-07-08",
+    "isOpen": false,
+    "source": "booking_com",
+    "note": "OTA block",
+    "guestName": "External OTA",
+    "demo": true
+  },
+  {
+    "_id": "closure_single_room_1_2026_07_05",
+    "unitId": "single_room_1",
+    "roomTypeKey": "single",
+    "dateKey": "2026-07-05",
+    "isOpen": false,
+    "source": "manual",
+    "note": "Private closure for demo",
+    "demo": true
+  },
+  {
+    "_id": "closure_double_room_2_2026_07_12",
+    "unitId": "double_room_2",
+    "roomTypeKey": "double",
+    "dateKey": "2026-07-12",
+    "isOpen": false,
+    "source": "instagram",
+    "note": "Influencer hold (manual)",
+    "demo": true
+  }
+]

@@ -29,6 +29,23 @@
 
 ---
 
+## 2026-06-19 (session 3) — Admin dashboards interactive demo fix
+
+### Root causes
+- **Init race:** admin CE fired `*-init` before host bridge loaded (bootstrap imported CE before host)
+- **Availability API:** wrong `occupancyByTypeDate` shape (flat keys vs nested `roomType → date`)
+- **Thin demo mappers:** booking/enquiry rows missing fields CE needs for cards, actions, expand panels
+- **Empty month:** availability defaulted to current calendar month, not July 2026 demo data
+
+### Fixes
+- Bootstrap order: `initDemoStore` → host bridge → custom element module
+- Eager `boot()` / `initPage()` on all admin hosts
+- Rewrote `adminAvailability.demo.js` with production-shaped occupancy + contexts (open/closed/hold/final/reserve)
+- Seed `inventory-unit-closures.json` + `bed-locks.json` for July 2026
+- Rich mappers in `adminDemoHelpers.js`, `adminStay.demo.js`, `adminSessions.demo.js`
+- Default availability month `2026-07`; admin pages hint + `?reset=1` on bootstraps
+
+
 ## 2026-06-19 (session 1)
 
 ### M0–M1 — Scaffold & data layer ✅

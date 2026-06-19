@@ -168,13 +168,15 @@ $w.onReady(() => {
     }
   }
 
-  ce.on('stay-manager-init', async () => {
+  async function boot() {
     await runAction(async () => {
       await bootstrap();
       await refreshBookings();
       return { ok: true };
     });
-  });
+  }
+
+  ce.on('stay-manager-init', boot);
 
   ce.on('stay-manager-nav', async (event) => {
     const tab = normalizeTab(event?.detail?.tab || DEFAULT_TAB);
@@ -306,4 +308,5 @@ $w.onReady(() => {
   });
 
   syncAll();
+  void boot();
 });

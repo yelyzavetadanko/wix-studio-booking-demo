@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "_id": "demo_lock_hold_001",
+    "lockId": "demo_lock_hold_001",
+    "status": "active",
+    "roomTypeKey": "dorm",
+    "quantityBeds": 2,
+    "startDate": "2026-07-02",
+    "endDate": "2026-07-06",
+    "expiresAt": "2027-01-01T00:00:00.000Z",
+    "bookingDraftId": "demo_hold_draft",
+    "demo": true
+  },
+  {
+    "_id": "demo_lock_hold_002",
+    "lockId": "demo_lock_hold_002",
+    "status": "active",
+    "roomTypeKey": "single",
+    "quantityBeds": 1,
+    "startDate": "2026-07-10",
+    "endDate": "2026-07-14",
+    "expiresAt": "2027-01-01T00:00:00.000Z",
+    "bookingDraftId": "demo_hold_single",
+    "demo": true
+  }
+]
