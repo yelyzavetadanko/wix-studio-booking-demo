@@ -185,65 +185,81 @@ class SessionManagerElement extends HTMLElement {
     const items = lines
       .map((ex) => {
         const dateText = String(ex.preferredDate || '').trim();
-        const titleCore = this.escapeHtml(ex.title || ex.activityKey || 'Activity');
-        const title = dateText
-          ? `${titleCore} - ${this.escapeHtml(this.formatDisplayDate(dateText) || dateText)}`
-          : titleCore;
+        const title = this.escapeHtml(ex.title || ex.activityKey || 'Activity');
         const metaBits = [ex.categoryLabel, ex.priceLabel].map((x) => String(x || '').trim()).filter(Boolean);
-        const meta = metaBits.length ? ` <span class="sm-muted">${this.escapeHtml(metaBits.join(' · '))}</span>` : '';
+        const chips = metaBits
+          .map((text) => `<span class="sm-activity-chip">${this.escapeHtml(text)}</span>`)
+          .join('');
         const note = String(ex.notes || '').trim()
           ? `<div class="sm-booking-subline">${this.escapeHtml(ex.notes)}</div>`
           : '';
-        return `<li><strong>${title}</strong>${meta}${note}</li>`;
+        return `<article class="sm-activity-card">
+          <div class="sm-activity-card-title">${title}</div>
+          ${chips ? `<div class="sm-activity-card-chips">${chips}</div>` : ''}
+          ${dateText ? `<div class="sm-booking-subline">Preferred date: ${this.escapeHtml(this.formatDisplayDate(dateText) || dateText)}</div>` : ''}
+          ${note}
+        </article>`;
       })
       .join('');
     return `
           <div class="sm-booking-block">
             <div class="sm-booking-block-title">Activities</div>
             ${notes ? `<div class="sm-booking-notes">${this.escapeHtml(notes)}</div>` : ''}
-            ${lines.length ? `<ul class="sm-booking-list">${items}</ul>` : ''}
+            ${lines.length ? `<div class="sm-activity-stack">${items}</div>` : ''}
           </div>`;
   }
 
   renderGuestDetailCard(g = {}) {
     const esc = (v) => this.escapeHtml(v);
-    const rows = [];
-    const push = (label, val) => {
+    const kv = (label, val) => {
       const t = String(val || '').trim();
-      if (t) rows.push(`<div class="sm-guest-kv"><span>${esc(label)}</span><b>${esc(t)}</b></div>`);
+      if (!t) return '';
+      return `<div class="sm-guest-kv"><span>${esc(label)}</span><b>${esc(t)}</b></div>`;
     };
-    push('Name', g.fullName);
-    push('Email', g.email);
-    push('Phone', g.phone);
-    push('Requested activity', g.enquiryActivityKey);
-    push('Lesson format', g.lessonFormat);
-    if (String(g.preferredDate || '').trim()) {
-      push('Preferred date', this.formatDisplayDate(g.preferredDate));
-    }
-    push('Surf level', g.surfLevel);
-    push('Surfed before', g.surfedBefore);
-    push('Water confidence', g.waterConfidence);
-    push('Surf goals', g.surfGoals);
-    push('Surf lesson request', g.surfLessonRequest);
-    if (String(g.surfNotes || '').trim()) push('Surf notes', g.surfNotes);
-    if (String(g.arrivalTransferType || '').trim()) {
-      push('Transfer type', this.formatTransferTypeLabel(g.arrivalTransferType));
-    }
-    push('Arrival ref / flight', g.arrivalReference);
-    if (String(g.arrivalTime || '').trim()) {
-      push('Arrival time', this.formatDisplayDateTime(g.arrivalTime));
-    }
+    const kvGrid = (rows) => {
+      const html = rows.filter(Boolean).join('');
+      return html ? `<div class="sm-guest-kv-grid">${html}</div>` : '';
+    };
     const idx = Number(g.index) || 1;
-    const contactBadge = idx === 1 ? ' <span class="sm-muted">(contact on file)</span>' : '';
-    const inner =
-      rows.length > 0
-        ? `<div class="sm-guest-kv-grid">${rows.join('')}</div>`
-        : `<p class="sm-muted sm-booking-subline">No extra fields stored for this guest.</p>`;
+    const isContact = idx === 1;
+    const contactSection = kvGrid([
+      kv('Name', g.fullName),
+      kv('Email', g.email),
+      kv('Phone', g.phone),
+    ]);
+    const surfSection = kvGrid([
+      kv('Requested activity', g.enquiryActivityKey),
+      kv('Lesson format', g.lessonFormat),
+      String(g.preferredDate || '').trim() ? kv('Preferred date', this.formatDisplayDate(g.preferredDate)) : '',
+      kv('Surf level', g.surfLevel),
+      kv('Surfed before', g.surfedBefore),
+      kv('Water confidence', g.waterConfidence),
+      kv('Surf goals', g.surfGoals),
+      kv('Surf lesson request', g.surfLessonRequest),
+      kv('Surf notes', g.surfNotes),
+    ]);
+    const arrivalSection = kvGrid([
+      String(g.arrivalTransferType || '').trim()
+        ? kv('Transfer type', this.formatTransferTypeLabel(g.arrivalTransferType))
+        : '',
+      kv('Arrival ref / flight', g.arrivalReference),
+      String(g.arrivalTime || '').trim() ? kv('Arrival time', this.formatDisplayDateTime(g.arrivalTime)) : '',
+    ]);
+    const hasContent = contactSection || surfSection || arrivalSection;
     return `
-            <div class="sm-guest-card">
-              <div class="sm-guest-card-title">Guest ${idx}${contactBadge}</div>
-              ${inner}
-            </div>`;
+            <article class="sm-guest-card${isContact ? ' sm-guest-card--contact' : ''}">
+              <header class="sm-guest-card-head">
+                <div class="sm-guest-card-title">Guest ${idx}</div>
+                ${isContact ? '<span class="sm-guest-badge">Primary contact</span>' : ''}
+              </header>
+              ${
+                hasContent
+                  ? `${contactSection ? `<div class="sm-guest-section"><div class="sm-guest-section-title">Contact</div>${contactSection}</div>` : ''}
+                     ${surfSection ? `<div class="sm-guest-section"><div class="sm-guest-section-title">Surf & activities</div>${surfSection}</div>` : ''}
+                     ${arrivalSection ? `<div class="sm-guest-section"><div class="sm-guest-section-title">Arrival</div>${arrivalSection}</div>` : ''}`
+                  : `<p class="sm-muted sm-booking-subline">No extra fields stored for this guest.</p>`
+              }
+            </article>`;
   }
 
   renderBookingGuestsSection(row = {}) {
@@ -1044,13 +1060,47 @@ class SessionManagerElement extends HTMLElement {
           border: 1px solid #e8edf5;
           border-radius: 12px;
           padding: 12px 14px;
-          background: #fafbfd;
+          background: #fff;
+        }
+        .sm-guest-card--contact {
+          border-color: #c8d8ff;
+          background: linear-gradient(180deg, #f8faff 0%, #fff 100%);
+        }
+        .sm-guest-card-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
         }
         .sm-guest-card-title {
           font-weight: 700;
-          font-size: 13px;
+          font-size: 14px;
           color: #1a2332;
-          margin-bottom: 10px;
+        }
+        .sm-guest-badge {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #294f9f;
+          background: #eef3ff;
+          border-radius: 999px;
+          padding: 3px 8px;
+        }
+        .sm-guest-section {
+          padding-top: 12px;
+          margin-top: 12px;
+          border-top: 1px solid #eef1f6;
+        }
+        .sm-guest-section-title {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #8a96a8;
+          margin-bottom: 8px;
         }
         .sm-guest-kv-grid {
           display: grid;
@@ -1066,7 +1116,25 @@ class SessionManagerElement extends HTMLElement {
           color: #6b7a90;
           margin-bottom: 2px;
         }
-        .sm-guest-kv b { font-size: 13px; font-weight: 600; color: #1a2332; }
+        .sm-guest-kv b { font-size: 13px; font-weight: 600; color: #1a2332; word-break: break-word; }
+        .sm-activity-stack { display: grid; gap: 8px; }
+        .sm-activity-card {
+          border: 1px solid #e8edf5;
+          border-radius: 10px;
+          padding: 10px 12px;
+          background: #fafbfd;
+        }
+        .sm-activity-card-title { font-size: 13px; font-weight: 700; color: #1a2332; margin-bottom: 4px; }
+        .sm-activity-card-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+        .sm-activity-chip {
+          display: inline-flex;
+          border-radius: 999px;
+          padding: 2px 8px;
+          font-size: 11px;
+          font-weight: 600;
+          background: #eef3ff;
+          color: #294f9f;
+        }
         .sm-booking-input-row { margin-top: 14px; }
         .sm-booking-input-row .sm-checkbox {
           grid-column: 1 / -1;

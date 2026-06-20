@@ -720,15 +720,18 @@ class RetreatSessionManagerElement extends HTMLElement {
                 <div class="rm-guest-stack">
                   ${guests
                     .map(
-                      (g, idx) => `<div class="rm-guest-card">
-                      <div class="rm-guest-title">Guest ${idx + 1}${idx === 0 ? ' (Contact)' : ''}</div>
-                      <table class="rm-table">
-                        <tr><td>Name</td><td>${this.escapeHtml(g.fullName || '-')}</td></tr>
-                        <tr><td>Email</td><td>${this.escapeHtml(g.email || '-')}</td></tr>
-                        <tr><td>Phone</td><td>${this.escapeHtml(g.phone || '-')}</td></tr>
-                        <tr><td>Dietary notes</td><td>${this.escapeHtml(g.dietaryNotes || '-')}</td></tr>
-                      </table>
-                    </div>`
+                      (g, idx) => `<article class="rm-guest-card${idx === 0 ? ' rm-guest-card--contact' : ''}">
+                      <header class="rm-guest-head">
+                        <div class="rm-guest-title">Guest ${idx + 1}</div>
+                        ${idx === 0 ? '<span class="rm-guest-badge">Primary contact</span>' : ''}
+                      </header>
+                      <div class="rm-guest-kv-grid">
+                        <div class="rm-guest-kv"><span>Name</span><b>${this.escapeHtml(g.fullName || '-')}</b></div>
+                        <div class="rm-guest-kv"><span>Email</span><b>${this.escapeHtml(g.email || '-')}</b></div>
+                        <div class="rm-guest-kv"><span>Phone</span><b>${this.escapeHtml(g.phone || '-')}</b></div>
+                        <div class="rm-guest-kv rm-guest-kv--span2"><span>Dietary notes</span><b>${this.escapeHtml(g.dietaryNotes || '-')}</b></div>
+                      </div>
+                    </article>`
                     )
                     .join('')}
                 </div>
@@ -958,7 +961,7 @@ class RetreatSessionManagerElement extends HTMLElement {
         .rm-btn-danger { border-color:#c93a3a; background:#c93a3a; color:#fff; }
         .rm-btn-danger:hover:not(:disabled) { border-color:#b02e2e; background:#b02e2e; }
         .rm-cards, .rm-enquiry-list { display:grid; gap:10px; }
-        .rm-card, .rm-detail-card { border:1px solid #e5e3dc; border-radius:12px; background:#fff; padding:10px; }
+        .rm-card, .rm-detail-card { border:1px solid #e5e3dc; border-radius:12px; background:#fff; padding:14px 16px; }
         .rm-card.is-selected { border-color:#de7a45; }
         .rm-card-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:8px; }
         .rm-card-head h4 { margin:0; font-size:14px; }
@@ -1002,24 +1005,39 @@ class RetreatSessionManagerElement extends HTMLElement {
         .rm-placeholder { border:1px dashed #d7d1c6; border-radius:10px; padding:14px; color:#756c61; background:#fff; }
         .rm-detail-card h4 { margin:0 0 2px; font-size:16px; }
         .rm-subtitle { color:#756c61; font-size:12px; margin-bottom:10px; }
-        .rm-detail-block { margin-bottom:10px; }
-        .rm-detail-title { font-size:12px; text-transform:uppercase; letter-spacing:.4px; color:#756c61; margin-bottom:6px; font-weight:700; }
-        .rm-table { width:100%; border-collapse:collapse; table-layout:fixed; border:1px solid #e5e3dc; border-radius:10px; overflow:hidden; }
-        .rm-table td, .rm-table th { border-top:1px solid #efe9df; padding:7px 8px; text-align:left; font-size:13px; vertical-align:top; word-break:break-word; }
+        .rm-detail-block {
+          margin-bottom:14px;
+          border:1px solid #e8edf5;
+          border-radius:12px;
+          padding:12px 14px;
+          background:#fafbfd;
+        }
+        .rm-detail-title { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:#756c61; margin-bottom:10px; font-weight:700; }
+        .rm-table { width:100%; border-collapse:collapse; table-layout:fixed; border:1px solid #e5e3dc; border-radius:10px; overflow:hidden; background:#fff; }
+        .rm-table td, .rm-table th { border-top:1px solid #efe9df; padding:8px 10px; text-align:left; font-size:13px; vertical-align:top; word-break:break-word; }
         .rm-table tr:first-child td, .rm-table tr:first-child th { border-top:0; }
-        .rm-table td:first-child, .rm-table th:first-child { width:28%; color:#756c61; }
-        .rm-note { border:1px solid #e5e3dc; border-radius:10px; padding:8px 10px; font-size:13px; background:#fff; white-space:pre-wrap; }
-        .rm-guest-stack { display:grid; gap:8px; }
-        .rm-guest-card { border:1px solid #e5e3dc; border-radius:10px; padding:8px; background:#fff; }
-        .rm-guest-title { font-size:12px; color:#756c61; margin-bottom:6px; font-weight:700; text-transform:uppercase; letter-spacing:.35px; }
-        .rm-intake-list { display:grid; gap:6px; }
-        .rm-intake-item { border:1px solid #e5e3dc; border-radius:8px; padding:8px; background:#fff; }
-        .rm-intake-q { font-size:12px; color:#756c61; margin-bottom:4px; }
-        .rm-intake-a { font-size:13px; color:#2d2820; white-space:pre-wrap; }
+        .rm-table td:first-child, .rm-table th:first-child { width:32%; color:#756c61; font-weight:600; }
+        .rm-note { border:1px solid #f0e4d4; border-radius:10px; padding:10px 12px; font-size:13px; background:#fffbf5; white-space:pre-wrap; line-height:1.5; color:#1a2332; }
+        .rm-guest-stack { display:grid; gap:10px; }
+        .rm-guest-card { border:1px solid #e5e3dc; border-radius:12px; padding:12px 14px; background:#fff; }
+        .rm-guest-card--contact { border-color:#c8d8ff; background:linear-gradient(180deg,#f8faff 0%,#fff 100%); }
+        .rm-guest-head { display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+        .rm-guest-title { font-size:14px; color:#1a2332; font-weight:700; text-transform:none; letter-spacing:0; margin-bottom:0; }
+        .rm-guest-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#294f9f; background:#eef3ff; border-radius:999px; padding:3px 8px; }
+        .rm-guest-kv-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px 14px; }
+        .rm-guest-kv { display:flex; flex-direction:column; gap:4px; min-width:0; }
+        .rm-guest-kv--span2 { grid-column:1 / -1; }
+        .rm-guest-kv span { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#756c61; }
+        .rm-guest-kv b { font-size:13px; font-weight:600; color:#1a2332; word-break:break-word; line-height:1.45; }
+        .rm-intake-list { display:grid; gap:8px; }
+        .rm-intake-item { border:1px solid #e5e3dc; border-radius:10px; padding:10px 12px; background:#fff; }
+        .rm-intake-q { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#756c61; margin-bottom:6px; }
+        .rm-intake-a { font-size:13px; color:#2d2820; white-space:pre-wrap; line-height:1.45; }
         .rm-loading { margin-bottom:10px; color:#756c61; font-size:13px; }
         @media (max-width: 980px) {
           .rm-enquiry-layout { grid-template-columns:1fr; }
           .rm-inline-fields { grid-template-columns:1fr; }
+          .rm-guest-kv-grid { grid-template-columns:1fr; }
         }
       </style>
       <div class="rm-wrap">

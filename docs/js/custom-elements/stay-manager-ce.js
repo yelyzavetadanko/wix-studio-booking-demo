@@ -354,6 +354,262 @@ class StayManagerElement extends HTMLElement {
     return `${chips} <span class="transfer-meta">${vehiclesText} · together: ${this.escapeHtml(together)}</span>`;
   }
 
+  renderDetailKv(label, value, { span2 = false, rawHtml = false } = {}) {
+    const cls = span2 ? 'detail-kv detail-kv--span2' : 'detail-kv';
+    const display =
+      rawHtml && value != null && value !== ''
+        ? value
+        : this.escapeHtml(value == null || value === '' ? '-' : value);
+    return `<div class="${cls}"><span class="detail-kv-label">${this.escapeHtml(label)}</span><span class="detail-kv-value">${display}</span></div>`;
+  }
+
+  renderDetailKvGrid(entries = []) {
+    if (!entries.length) return '';
+    return `<div class="details-grid">${entries
+      .map(([label, value, opts]) => this.renderDetailKv(label, value, opts || {}))
+      .join('')}</div>`;
+  }
+
+  renderActivityCard(item = {}) {
+    const title = this.escapeHtml(item.title || item.activityKey || '-');
+    const date = this.escapeHtml(this.humanDate(item.preferredDate || ''));
+    const category = this.escapeHtml(String(item.categoryLabel || '').trim());
+    const price = this.escapeHtml(String(item.priceLabel || '').trim());
+    const note = this.escapeHtml(String(item.notes || '').trim());
+    const chips = [category, price]
+      .filter(Boolean)
+      .map((text) => `<span class="activity-chip">${text}</span>`)
+      .join('');
+    return `
+      <article class="activity-item">
+        <div class="activity-item-title">${title}</div>
+        ${chips ? `<div class="activity-item-chips">${chips}</div>` : ''}
+        <div class="activity-item-meta">Preferred date: ${date}</div>
+        ${note ? `<div class="activity-item-note">${note}</div>` : ''}
+      </article>`;
+  }
+
+  renderActivityStack(items = []) {
+    if (!items.length) return '<p class="detail-empty">No activities recorded.</p>';
+    return `<div class="activity-stack">${items.map((item) => this.renderActivityCard(item)).join('')}</div>`;
+  }
+
+  renderGuestDetailCard(g = {}, { showSurf = false, index = 1, isContact = false } = {}) {
+    const idx = Number(g.index || index || 1);
+    const name = this.escapeHtml(g.fullName || `Guest ${idx}`);
+    const contact = isContact || idx === 1;
+    const contactEntries = [];
+    if (g.email) contactEntries.push(['Email', g.email]);
+    if (g.phone) contactEntries.push(['Phone', g.phone]);
+    const arrivalEntries = [
+      ['Transfer', this.renderTransferChip(g.arrivalTransferType || '') || '-', { rawHtml: true }],
+      ['Reference / flight', g.arrivalReference || '-'],
+      ['Arrival time', g.arrivalTime ? this.humanDateTime(g.arrivalTime) : '-'],
+    ];
+    let surfSection = '';
+    if (showSurf) {
+      const surfEntries = [];
+      const lessonRaw = String(g.surfLessonRequest || g.enquiryActivityKey || '').trim();
+      if (lessonRaw) {
+        surfEntries.push(['Lesson', this.surfLessonLabel(lessonRaw)]);
+        if (g.lessonFormat) surfEntries.push(['Format', this.lessonFormatLabel(g.lessonFormat)]);
+      }
+      if (g.surfLevel) surfEntries.push(['Surf level', this.toTitleCaseWords(g.surfLevel)]);
+      if (g.waterConfidence) surfEntries.push(['Ocean comfort', this.toTitleCaseWords(g.waterConfidence)]);
+      if (g.preferredDate) surfEntries.push(['Preferred date', this.humanDate(g.preferredDate)]);
+      if (g.surfNotes) surfEntries.push(['Notes', g.surfNotes, { span2: true }]);
+      if (surfEntries.length) {
+        surfSection = `
+          <div class="guest-card-section">
+            <div class="guest-card-section-title">Surf & activities</div>
+            ${this.renderDetailKvGrid(surfEntries)}
+          </div>`;
+      }
+    }
+    return `
+      <article class="guest-card${contact ? ' guest-card--contact' : ''}">
+        <header class="guest-card-head">
+          <span class="guest-card-name">${name}</span>
+          ${contact ? '<span class="guest-card-badge">Primary contact</span>' : ''}
+        </header>
+        ${
+          contactEntries.length
+            ? `<div class="guest-card-section">
+                <div class="guest-card-section-title">Contact</div>
+                ${this.renderDetailKvGrid(contactEntries)}
+              </div>`
+            : ''
+        }
+        <div class="guest-card-section">
+          <div class="guest-card-section-title">Arrival</div>
+          ${this.renderDetailKvGrid(arrivalEntries)}
+        </div>
+        ${surfSection}
+      </article>`;
+  }
+
+  renderGuestStack(guestRows = [], options = {}) {
+    if (!guestRows.length) return '<p class="detail-empty">No guest details recorded.</p>';
+    return `<div class="guest-stack">${guestRows
+      .map((g, i) =>
+        this.renderGuestDetailCard(g, {
+          ...options,
+          index: Number(g.index) || i + 1,
+          isContact: i === 0,
+        })
+      )
+      .join('')}</div>`;
+  }
+
+  renderNoteBlock(label, text, { hidden = false } = {}) {
+    const value = String(text || '').trim();
+    if (hidden || !value) return '';
+    return `<div class="admin-note"><span class="admin-note-label">${this.escapeHtml(label)}</span><p class="admin-note-text">${this.escapeHtml(value)}</p></div>`;
+  }
+
+  renderPaymentActionsPanel(bookingId, row = {}, { isEnquiry = false } = {}) {
+    const noteValue = isEnquiry ? row.notes || '' : row.adminNotes || '';
+    return `
+      <div class="details-actions-panel">
+        <div class="detail-block-head">Admin actions</div>
+        <label class="field">
+          Payment link
+          <input type="text" data-payment-link="${this.escapeHtml(bookingId)}" value="${this.escapeHtml(row.manualPaymentLink || '')}" placeholder="https://..." />
+        </label>
+        <label class="field">
+          Note (optional)
+          <textarea rows="2" data-note="${this.escapeHtml(bookingId)}" placeholder="Optional note for audit">${this.escapeHtml(noteValue)}</textarea>
+        </label>
+        <label class="field refund-field">
+          <span>Refund completed (manual)</span>
+          <input type="checkbox" data-refund="${this.escapeHtml(bookingId)}" ${row.refundCompleted ? 'checked' : ''} />
+        </label>
+        <div class="actions">
+          ${
+            row.canSendPaymentLink
+              ? `<button class="primary" data-action="send-link" data-booking-id="${this.escapeHtml(bookingId)}">Send payment link</button>`
+              : ''
+          }
+          ${
+            row.canMarkPaid
+              ? `<button class="ok" data-action="mark-paid" data-booking-id="${this.escapeHtml(bookingId)}">Mark paid</button>`
+              : ''
+          }
+          ${
+            row.canMarkUnpaid
+              ? `<button class="warn" data-action="mark-unpaid" data-booking-id="${this.escapeHtml(bookingId)}">Mark unpaid</button>`
+              : ''
+          }
+          ${
+            row.canCancel
+              ? `<button class="danger" data-action="cancel" data-booking-id="${this.escapeHtml(bookingId)}">Cancel</button>`
+              : ''
+          }
+        </div>
+      </div>`;
+  }
+
+  renderEnquiryDetailsPanel(row = {}, bookingId = '') {
+    const guestRows = Array.isArray(row.guestDetails) ? row.guestDetails : [];
+    const activityRows = Array.isArray(row.activityRequestsDetailed) ? row.activityRequestsDetailed : [];
+    const sharedArrivalLabel = Number(row.guests || 0) <= 1 ? 'Arrival details' : 'Shared arrival';
+    return `
+      <section class="booking-details">
+        <div class="details-panel">
+          <div class="details-panel-meta">
+            <div class="detail-block-head">Enquiry overview</div>
+            ${this.renderDetailKvGrid([
+              ['Enquiry ID', bookingId],
+              ['Type', row.enquiryType || '-'],
+              ['Phone', row.guestPhone || '-'],
+              ['Guests', String(row.guests || 0)],
+              ['Requested dates', this.formatRequestedDates(row.requestedDates || '')],
+              ['Activities', (row.activityRequestKeys || []).join(', ') || '-', { span2: true }],
+              ['Invoice sent at', this.humanDateTime(row.invoiceSentAt || '')],
+              ['Payment due at', this.humanDateTime(row.paymentDueAt || '')],
+              ['Reminder sent at', this.humanDateTime(row.paymentReminderSentAt || '')],
+              ['Reminder count', String(Number(row.paymentReminderCount || 0))],
+              ['Refund completed', row.refundCompleted ? 'Yes' : 'No'],
+            ])}
+          </div>
+          <div class="detail-block">
+            <div class="detail-title">Activity schedule</div>
+            ${this.renderActivityStack(activityRows)}
+          </div>
+          <div class="detail-block">
+            <div class="detail-title">Guests and arrivals</div>
+            ${this.renderGuestStack(guestRows)}
+          </div>
+          <div class="details-panel-meta">
+            <div class="detail-block-head">Transfer & arrival summary</div>
+            ${this.renderDetailKvGrid([
+              ['Transfer summary', this.renderTransferSummary(row), { rawHtml: true, span2: true }],
+              [sharedArrivalLabel, row.sharedArrivalLine || '-', { span2: true }],
+            ])}
+          </div>
+          <div class="admin-note-block">
+            ${this.renderNoteBlock('Guest note', row.activityRequestNotes || row.notes || '-')}
+            ${this.renderNoteBlock('Dietary notes', row.dietaryNotes || '', {
+              hidden: !String(row.dietaryNotes || '').trim(),
+            })}
+          </div>
+        </div>
+        ${this.renderPaymentActionsPanel(bookingId, row, { isEnquiry: true })}
+      </section>`;
+  }
+
+  renderStayBookingDetailsPanel(row = {}, bookingId = '') {
+    const guestRows = Array.isArray(row.bookingGuests) ? row.bookingGuests : [];
+    const activityRows = Array.isArray(row.experienceLines) ? row.experienceLines : [];
+    const sharedArrivalLabel = Number(row.guestCount || 0) <= 1 ? 'Arrival details' : 'Shared arrival';
+    return `
+      <section class="booking-details">
+        <div class="details-panel">
+          <div class="details-panel-meta">
+            <div class="detail-block-head">Booking overview</div>
+            ${this.renderDetailKvGrid([
+              ['Booking ID', bookingId],
+              ['Flow', row.bookingFlowTitle || row.bookingFlow || '-'],
+              ['Phone', row.guestPhone || '-'],
+              ['Rooms', String(row.roomSelectionsCount || 0)],
+              ['Activities', String(row.experienceRequestsCount || 0)],
+              ['Invoice', row.invoiceStatus || '-'],
+              ['Invoice sent at', this.humanDateTime(row.invoiceSentAt || '')],
+              ['Payment due at', this.humanDateTime(row.paymentDueAt || '')],
+              ['Reminder sent at', this.humanDateTime(row.paymentReminderSentAt || '')],
+              ['Reminder count', String(Number(row.paymentReminderCount || 0))],
+              ['Refund completed', row.refundCompleted ? 'Yes' : 'No'],
+            ])}
+          </div>
+          <div class="detail-block">
+            <div class="detail-title">Activity requests</div>
+            ${this.renderActivityStack(activityRows)}
+          </div>
+          <div class="detail-block">
+            <div class="detail-title">Guests and arrivals</div>
+            ${this.renderGuestStack(guestRows, { showSurf: true })}
+          </div>
+          <div class="details-panel-meta">
+            <div class="detail-block-head">Transfer & arrival summary</div>
+            ${this.renderDetailKvGrid([
+              ['Transfer summary', this.renderTransferSummary(row), { rawHtml: true, span2: true }],
+              [sharedArrivalLabel, row.sharedArrivalLine || '-', { span2: true }],
+            ])}
+          </div>
+          <div class="admin-note-block">
+            ${this.renderNoteBlock('Activity request note', row.activityRequestNotes || '', {
+              hidden: !String(row.activityRequestNotes || '').trim(),
+            })}
+            ${this.renderNoteBlock('Dietary notes', row.dietaryNotes || '', {
+              hidden: !String(row.dietaryNotes || '').trim(),
+            })}
+            ${this.renderNoteBlock('Admin note', row.adminNotes || '-')}
+          </div>
+        </div>
+        ${this.renderPaymentActionsPanel(bookingId, row)}
+      </section>`;
+  }
+
   renderTabButton(key, label) {
     const active = this.currentTab() === key;
     return `<button class="tab-btn ${active ? 'active' : ''}" data-tab="${key}">${label}</button>`;
@@ -370,33 +626,6 @@ class StayManagerElement extends HTMLElement {
         .map((row) => {
           const bookingId = String(row.enquiryId || row.enquiryItemId || '');
           const expanded = this.expanded.has(bookingId);
-          const activityRows = Array.isArray(row.activityRequestsDetailed) ? row.activityRequestsDetailed : [];
-          const guestRows = Array.isArray(row.guestDetails) ? row.guestDetails : [];
-          const sharedArrivalLabel = Number(row.guests || 0) <= 1 ? 'Arrival details' : 'Shared arrival';
-          const activityLines = activityRows.length
-            ? activityRows
-                .map((item) => {
-                  const title = this.escapeHtml(item.title || item.activityKey || '-');
-                  const date = this.escapeHtml(this.humanDate(item.preferredDate || ''));
-                  const category = this.escapeHtml(String(item.categoryLabel || '').trim());
-                  const price = this.escapeHtml(String(item.priceLabel || '').trim());
-                  const meta = [category ? `[${category}]` : '', price ? `(${price})` : ''].filter(Boolean).join(' ');
-                  return `<li><strong>${title}</strong>${meta ? ` ${meta}` : ''} · Preferred date: ${date}</li>`;
-                })
-                .join('')
-            : '<li>-</li>';
-          const guestLines = guestRows.length
-            ? guestRows
-                .map((g) => {
-                  const name = this.escapeHtml(g.fullName || `Guest ${Number(g.index || 0) || 1}`);
-                  const contact = [g.email || '', g.phone || ''].filter(Boolean).map((v) => this.escapeHtml(v)).join(' | ');
-                  const transfer = this.renderTransferChip(g.arrivalTransferType || '') || this.escapeHtml('-');
-                  const ref = this.escapeHtml(g.arrivalReference || '-');
-                  const time = this.escapeHtml(this.humanDateTime(g.arrivalTime || ''));
-                  return `<li><strong>${name}</strong>${contact ? ` <span class="muted-inline">(${contact})</span>` : ''}<br/>Transfer: ${transfer} · Ref: ${ref} · Arrival: ${time}</li>`;
-                })
-                .join('')
-            : '<li>-</li>';
           return `
             <article class="booking-card">
               <header class="booking-head">
@@ -413,75 +642,7 @@ class StayManagerElement extends HTMLElement {
                   ${expanded ? 'Hide details' : 'View details'}
                 </button>
               </header>
-              ${
-                expanded
-                  ? `
-                <section class="booking-details">
-                  <div class="details-grid">
-                    <div><strong>Enquiry ID:</strong> ${this.escapeHtml(bookingId)}</div>
-                    <div><strong>Type:</strong> ${this.escapeHtml(row.enquiryType || '-')}</div>
-                    <div><strong>Phone:</strong> ${this.escapeHtml(row.guestPhone || '-')}</div>
-                    <div><strong>Guests:</strong> ${this.escapeHtml(String(row.guests || 0))}</div>
-                    <div><strong>Requested dates:</strong> ${this.escapeHtml(this.formatRequestedDates(row.requestedDates || ''))}</div>
-                    <div><strong>Activities:</strong> ${this.escapeHtml((row.activityRequestKeys || []).join(', ') || '-')}</div>
-                    <div><strong>Invoice sent at:</strong> ${this.escapeHtml(this.humanDateTime(row.invoiceSentAt || ''))}</div>
-                    <div><strong>Payment due at:</strong> ${this.escapeHtml(this.humanDateTime(row.paymentDueAt || ''))}</div>
-                    <div><strong>Reminder sent at:</strong> ${this.escapeHtml(this.humanDateTime(row.paymentReminderSentAt || ''))}</div>
-                    <div><strong>Reminder count:</strong> ${this.escapeHtml(String(Number(row.paymentReminderCount || 0)))}</div>
-                    <div><strong>Refund completed:</strong> ${row.refundCompleted ? 'Yes' : 'No'}</div>
-                  </div>
-                  <div class="detail-block">
-                    <div class="detail-title">Activity schedule</div>
-                    <ul class="detail-list">${activityLines}</ul>
-                  </div>
-                  <div class="detail-block">
-                    <div class="detail-title">Guests and arrivals</div>
-                    <ul class="detail-list">${guestLines}</ul>
-                  </div>
-                  <div class="details-grid">
-                    <div><strong>Transfer summary:</strong> ${this.renderTransferSummary(row)}</div>
-                    <div><strong>${this.escapeHtml(sharedArrivalLabel)}:</strong> ${this.escapeHtml(row.sharedArrivalLine || '-')}</div>
-                  </div>
-                  <div class="admin-note"><strong>Guest note:</strong> ${this.escapeHtml(row.activityRequestNotes || row.notes || '-')}</div>
-                  <div class="admin-note ${String(row.dietaryNotes || '').trim() ? '' : 'hidden'}"><strong>Dietary notes:</strong> ${this.escapeHtml(row.dietaryNotes || '')}</div>
-                  <label class="field">
-                    Payment link
-                    <input type="text" data-payment-link="${this.escapeHtml(bookingId)}" value="${this.escapeHtml(row.manualPaymentLink || '')}" placeholder="https://..." />
-                  </label>
-                  <label class="field">
-                    Note (optional)
-                    <textarea rows="2" data-note="${this.escapeHtml(bookingId)}" placeholder="Optional note for audit">${this.escapeHtml(row.notes || '')}</textarea>
-                  </label>
-                  <label class="field refund-field">
-                    <span>Refund completed (manual)</span>
-                    <input type="checkbox" data-refund="${this.escapeHtml(bookingId)}" ${row.refundCompleted ? 'checked' : ''} />
-                  </label>
-                  <div class="actions">
-                    ${
-                      row.canSendPaymentLink
-                        ? `<button class="primary" data-action="send-link" data-booking-id="${this.escapeHtml(bookingId)}">Send payment link</button>`
-                        : ''
-                    }
-                    ${
-                      row.canMarkPaid
-                        ? `<button class="ok" data-action="mark-paid" data-booking-id="${this.escapeHtml(bookingId)}">Mark paid</button>`
-                        : ''
-                    }
-                    ${
-                      row.canMarkUnpaid
-                        ? `<button class="warn" data-action="mark-unpaid" data-booking-id="${this.escapeHtml(bookingId)}">Mark unpaid</button>`
-                        : ''
-                    }
-                    ${
-                      row.canCancel
-                        ? `<button class="danger" data-action="cancel" data-booking-id="${this.escapeHtml(bookingId)}">Cancel</button>`
-                        : ''
-                    }
-                  </div>
-                </section>
-              `
-                  : ''
-              }
+              ${expanded ? this.renderEnquiryDetailsPanel(row, bookingId) : ''}
             </article>
           `;
         })
@@ -495,53 +656,6 @@ class StayManagerElement extends HTMLElement {
       .map((row) => {
         const bookingId = String(row.bookingId || '');
         const expanded = this.expanded.has(bookingId);
-        const activityRows = Array.isArray(row.experienceLines) ? row.experienceLines : [];
-        const guestRows = Array.isArray(row.bookingGuests) ? row.bookingGuests : [];
-        const sharedArrivalLabel = Number(row.guestCount || 0) <= 1 ? 'Arrival details' : 'Shared arrival';
-        const activityLines = activityRows.length
-          ? activityRows
-              .map((item) => {
-                const date = this.escapeHtml(this.humanDate(item.preferredDate || ''));
-                const title = this.escapeHtml(item.title || item.activityKey || '-');
-                const category = this.escapeHtml(String(item.categoryLabel || '').trim());
-                const price = this.escapeHtml(String(item.priceLabel || '').trim());
-                const note = this.escapeHtml(String(item.notes || '').trim());
-                const meta = [category ? `[${category}]` : '', price ? `(${price})` : ''].filter(Boolean).join(' ');
-                return `<li><strong>${title}</strong>${meta ? ` ${meta}` : ''} · Preferred date: ${date}${note ? `<br/><span class="muted-inline">${note}</span>` : ''}</li>`;
-              })
-              .join('')
-          : '<li>-</li>';
-        const guestLines = guestRows.length
-          ? guestRows
-              .map((g) => {
-                const name = this.escapeHtml(g.fullName || `Guest ${Number(g.index || 0) || 1}`);
-                const contact = [g.email || '', g.phone || ''].filter(Boolean).map((v) => this.escapeHtml(v)).join(' | ');
-                const transfer = this.renderTransferChip(g.arrivalTransferType || '') || this.escapeHtml('-');
-                const ref = this.escapeHtml(g.arrivalReference || '-');
-                const time = this.escapeHtml(this.humanDateTime(g.arrivalTime || ''));
-                const lessonRaw = String(g.surfLessonRequest || g.enquiryActivityKey || '').trim();
-                const lesson = this.escapeHtml(this.surfLessonLabel(lessonRaw));
-                const lessonFormat = this.escapeHtml(this.lessonFormatLabel(g.lessonFormat || ''));
-                const surfLevel = this.escapeHtml(this.toTitleCaseWords(g.surfLevel || ''));
-                const oceanComfort = this.escapeHtml(this.toTitleCaseWords(g.waterConfidence || ''));
-                const preferredDate = this.escapeHtml(this.humanDate(g.preferredDate || ''));
-                const surfNotes = this.escapeHtml(String(g.surfNotes || '').trim());
-                const surfParts = [];
-                if (lessonRaw) {
-                  surfParts.push(`Lesson: ${lesson}`);
-                  if (lessonFormat) surfParts.push(`Format: ${lessonFormat}`);
-                }
-                if (g.surfLevel) surfParts.push(`Level: ${surfLevel}`);
-                if (g.waterConfidence) surfParts.push(`Ocean comfort: ${oceanComfort}`);
-                if (g.preferredDate) surfParts.push(`Preferred date: ${preferredDate}`);
-                const surfLine = surfParts.length
-                  ? `<br/><span class="muted-inline">${this.escapeHtml('Surf')}: ${surfParts.join(' · ')}</span>`
-                  : '';
-                const notesLine = surfNotes ? `<br/><span class="muted-inline">Notes: ${surfNotes}</span>` : '';
-                return `<li><strong>${name}</strong>${contact ? ` <span class="muted-inline">(${contact})</span>` : ''}<br/>Transfer: ${transfer} · Ref: ${ref} · Arrival: ${time}${surfLine}${notesLine}</li>`;
-              })
-              .join('')
-          : '<li>-</li>';
         return `
           <article class="booking-card">
             <header class="booking-head">
@@ -558,76 +672,7 @@ class StayManagerElement extends HTMLElement {
                 ${expanded ? 'Hide details' : 'View details'}
               </button>
             </header>
-            ${
-              expanded
-                ? `
-              <section class="booking-details">
-                <div class="details-grid">
-                  <div><strong>Booking ID:</strong> ${this.escapeHtml(bookingId)}</div>
-                  <div><strong>Flow:</strong> ${this.escapeHtml(row.bookingFlowTitle || row.bookingFlow || '')}</div>
-                  <div><strong>Phone:</strong> ${this.escapeHtml(row.guestPhone || '-')}</div>
-                  <div><strong>Rooms:</strong> ${this.escapeHtml(String(row.roomSelectionsCount || 0))}</div>
-                  <div><strong>Activities:</strong> ${this.escapeHtml(String(row.experienceRequestsCount || 0))}</div>
-                  <div><strong>Invoice:</strong> ${this.escapeHtml(row.invoiceStatus || '-')}</div>
-                  <div><strong>Invoice sent at:</strong> ${this.escapeHtml(this.humanDateTime(row.invoiceSentAt || ''))}</div>
-                  <div><strong>Payment due at:</strong> ${this.escapeHtml(this.humanDateTime(row.paymentDueAt || ''))}</div>
-                  <div><strong>Reminder sent at:</strong> ${this.escapeHtml(this.humanDateTime(row.paymentReminderSentAt || ''))}</div>
-                  <div><strong>Reminder count:</strong> ${this.escapeHtml(String(Number(row.paymentReminderCount || 0)))}</div>
-                  <div><strong>Refund completed:</strong> ${row.refundCompleted ? 'Yes' : 'No'}</div>
-                </div>
-                <div class="detail-block">
-                  <div class="detail-title">Activity requests</div>
-                  <ul class="detail-list">${activityLines}</ul>
-                </div>
-                <div class="detail-block">
-                  <div class="detail-title">Guests and arrivals</div>
-                  <ul class="detail-list">${guestLines}</ul>
-                </div>
-                <div class="details-grid">
-                  <div><strong>Transfer summary:</strong> ${this.renderTransferSummary(row)}</div>
-                  <div><strong>${this.escapeHtml(sharedArrivalLabel)}:</strong> ${this.escapeHtml(row.sharedArrivalLine || '-')}</div>
-                </div>
-                <div class="admin-note ${String(row.activityRequestNotes || '').trim() ? '' : 'hidden'}"><strong>Activity request note:</strong> ${this.escapeHtml(row.activityRequestNotes || '')}</div>
-                <div class="admin-note ${String(row.dietaryNotes || '').trim() ? '' : 'hidden'}"><strong>Dietary notes:</strong> ${this.escapeHtml(row.dietaryNotes || '')}</div>
-                <div class="admin-note"><strong>Admin note:</strong> ${this.escapeHtml(row.adminNotes || '-')}</div>
-                <label class="field">
-                  Payment link
-                  <input type="text" data-payment-link="${this.escapeHtml(bookingId)}" value="${this.escapeHtml(row.manualPaymentLink || '')}" placeholder="https://..." />
-                </label>
-                <label class="field">
-                  Note (optional)
-                  <textarea rows="2" data-note="${this.escapeHtml(bookingId)}" placeholder="Optional note for audit">${this.escapeHtml(row.adminNotes || '')}</textarea>
-                </label>
-                <label class="field refund-field">
-                  <span>Refund completed (manual)</span>
-                  <input type="checkbox" data-refund="${this.escapeHtml(bookingId)}" ${row.refundCompleted ? 'checked' : ''} />
-                </label>
-                <div class="actions">
-                  ${
-                    row.canSendPaymentLink
-                      ? `<button class="primary" data-action="send-link" data-booking-id="${this.escapeHtml(bookingId)}">Send payment link</button>`
-                      : ''
-                  }
-                  ${
-                    row.canMarkPaid
-                      ? `<button class="ok" data-action="mark-paid" data-booking-id="${this.escapeHtml(bookingId)}">Mark paid</button>`
-                      : ''
-                  }
-                  ${
-                    row.canMarkUnpaid
-                      ? `<button class="warn" data-action="mark-unpaid" data-booking-id="${this.escapeHtml(bookingId)}">Mark unpaid</button>`
-                      : ''
-                  }
-                  ${
-                    row.canCancel
-                      ? `<button class="danger" data-action="cancel" data-booking-id="${this.escapeHtml(bookingId)}">Cancel</button>`
-                      : ''
-                  }
-                </div>
-              </section>
-            `
-                : ''
-            }
+            ${expanded ? this.renderStayBookingDetailsPanel(row, bookingId) : ''}
           </article>
         `;
       })
@@ -840,12 +885,150 @@ class StayManagerElement extends HTMLElement {
           font-weight: 600;
           letter-spacing: 0.01em;
         }
-        .booking-details { display: grid; gap: 14px; border-top: 1px solid #e8edf5; padding-top: 16px; margin-top: 2px; }
-        .details-grid { display: grid; grid-template-columns: repeat(2, minmax(180px, 1fr)); gap: 10px; font-size: 13px; color: #3b4a61; }
-        .details-grid strong { color: #1a2332; font-weight: 600; }
-        .detail-block { border: 1px solid #e8edf5; border-radius: 10px; padding: 10px 12px; background: #fafbfd; }
-        .detail-title { font-size: 12px; font-weight: 700; color: #1a2332; margin-bottom: 6px; letter-spacing: 0.01em; }
-        .detail-list { margin: 0; padding-left: 18px; color: #3b4a61; font-size: 13px; line-height: 1.45; display: grid; gap: 6px; }
+        .booking-details { display: grid; gap: 0; border-top: 1px solid #e8edf5; padding-top: 18px; margin-top: 4px; }
+        .details-panel { display: grid; gap: 16px; }
+        .details-panel-meta {
+          border: 1px solid #e8edf5;
+          border-radius: 12px;
+          padding: 14px 16px;
+          background: #fafbfd;
+        }
+        .detail-block-head {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #6b7a90;
+          margin-bottom: 12px;
+        }
+        .details-grid { display: grid; grid-template-columns: repeat(2, minmax(160px, 1fr)); gap: 12px 16px; }
+        .detail-kv { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .detail-kv--span2 { grid-column: 1 / -1; }
+        .detail-kv-label {
+          font-size: 11px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #6b7a90;
+        }
+        .detail-kv-value {
+          font-size: 13px;
+          font-weight: 500;
+          color: #1a2332;
+          line-height: 1.45;
+          word-break: break-word;
+        }
+        .detail-block {
+          border: 1px solid #e8edf5;
+          border-radius: 12px;
+          padding: 14px 16px;
+          background: #fff;
+          display: grid;
+          gap: 12px;
+        }
+        .detail-title { font-size: 13px; font-weight: 700; color: #1a2332; letter-spacing: 0.01em; }
+        .detail-empty {
+          margin: 0;
+          font-size: 13px;
+          color: #6b7a90;
+          font-style: italic;
+        }
+        .activity-stack { display: grid; gap: 8px; }
+        .activity-item {
+          border: 1px solid #e8edf5;
+          border-radius: 10px;
+          padding: 10px 12px;
+          background: #fafbfd;
+          display: grid;
+          gap: 4px;
+        }
+        .activity-item-title { font-size: 13px; font-weight: 700; color: #1a2332; }
+        .activity-item-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+        .activity-chip {
+          display: inline-flex;
+          align-items: center;
+          border-radius: 999px;
+          padding: 2px 8px;
+          font-size: 11px;
+          font-weight: 600;
+          background: #eef3ff;
+          color: #294f9f;
+        }
+        .activity-item-meta { font-size: 12px; color: #5a6a82; line-height: 1.45; }
+        .activity-item-note { font-size: 12px; color: #6b7a90; line-height: 1.45; }
+        .guest-stack { display: grid; gap: 10px; }
+        .guest-card {
+          border: 1px solid #e8edf5;
+          border-radius: 12px;
+          padding: 12px 14px;
+          background: #fff;
+          display: grid;
+          gap: 0;
+        }
+        .guest-card--contact {
+          border-color: #c8d8ff;
+          background: linear-gradient(180deg, #f8faff 0%, #fff 100%);
+        }
+        .guest-card-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+        }
+        .guest-card-name { font-size: 14px; font-weight: 700; color: #1a2332; }
+        .guest-card-badge {
+          font-size: 10px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #294f9f;
+          background: #eef3ff;
+          border-radius: 999px;
+          padding: 3px 8px;
+        }
+        .guest-card-section {
+          display: grid;
+          gap: 8px;
+          padding-top: 12px;
+          margin-top: 12px;
+          border-top: 1px solid #eef1f6;
+        }
+        .guest-card-section-title {
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #8a96a8;
+        }
+        .admin-note-block { display: grid; gap: 10px; }
+        .admin-note {
+          font-size: 13px;
+          color: #3b4a61;
+          line-height: 1.5;
+          padding: 12px 14px;
+          background: #fffbf5;
+          border: 1px solid #f0e4d4;
+          border-radius: 10px;
+        }
+        .admin-note-label {
+          display: block;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          color: #8a7a62;
+          margin-bottom: 6px;
+        }
+        .admin-note-text { margin: 0; color: #1a2332; }
+        .details-actions-panel {
+          border-top: 1px solid #e8edf5;
+          margin-top: 18px;
+          padding-top: 18px;
+          display: grid;
+          gap: 12px;
+        }
         .transfer-chip {
           display: inline-flex;
           align-items: center;
@@ -864,8 +1047,6 @@ class StayManagerElement extends HTMLElement {
         .transfer-chip.generic { background: #edf1f7; border-color: #d3dce9; color: #4e5f78; }
         .transfer-meta { color: #5a6a82; font-size: 12px; font-weight: 500; }
         .muted-inline { color: #6b7a90; font-weight: 500; }
-        .admin-note { font-size: 13px; color: #3b4a61; line-height: 1.5; }
-        .admin-note strong { color: #1a2332; }
         .actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px; }
         .hidden { display: none; }
         .error {
@@ -896,12 +1077,14 @@ class StayManagerElement extends HTMLElement {
           .booking-head { grid-template-columns: 1fr; gap: 10px; }
           .booking-meta { text-align: left; }
           .details-grid { grid-template-columns: 1fr; }
+          .guest-card-section .details-grid { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 600px) {
           .panel { padding: 14px; }
           .booking-card { padding: 14px; }
           .filters { grid-template-columns: 1fr; }
           .enquiry-filters { grid-template-columns: 1fr; }
+          .guest-card-section .details-grid { grid-template-columns: 1fr; }
           .actions { gap: 8px; }
           .actions button { flex: 1 1 auto; min-width: 0; }
         }
